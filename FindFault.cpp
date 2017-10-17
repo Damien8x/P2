@@ -1,12 +1,20 @@
+// Author: Damien Sudol
+// Filename: EncryptWord P2
+// Date: 10/16/2017
+// Version: 1.1
+
 #include "FindFault.h"
-//CONSTANTS
+//FindFault.cpp constants are used to enhance readability and avoid hard coding.
 const int NO_CORRUPTION = 5;
 const int CORRUPTION = 6;
 
+// class attributes
 int arraySize;
 EncryptWord * ewArray;
 string * phraseArray;
 
+// default constructor setting initial state of object.
+// all pointers set to NULL, arraySize set to 0
 FindFault::FindFault()
 {
 	ewArray = NULL;
@@ -14,72 +22,59 @@ FindFault::FindFault()
 	arraySize = 0;
 }
 
-
-int FindFault::getArraySize() {
+int FindFault::getArraySize() const{
 	return arraySize;
 }
 
-string FindFault::encrypt(string phrase) {
-	setArraySize();
-	EncryptWord ew;
-	addEW(ew);
-	addPhrase(phrase);
+string FindFault::encrypt(string phrase, int position) {
+
+	
+	addEW(position);
+	addPhrase(phrase, position);
 	phrase = corruptionPossible(phrase);
+	phrase = ewArray[position - 1].encrypt(phrase);
 	return phrase;
 }
 
 int FindFault::detectCorruption(int objectNumber, int guess) {
-	int relativeShift = ewArray[objectNumber].checkShift(guess);
+	int relativeShift = ewArray[objectNumber - 1].checkShift(guess);
 	if (relativeShift == 0) {
-		int corruption = comparePhrases(objectNumber);
+		int corruption = comparePhrases(objectNumber-1);
 		return corruption;
 	}else
 	return relativeShift;
 }
 
 int FindFault::checkQueryAttempts(int objectNumber) {
-	int queryAttempts = ewArray[objectNumber].getGuessCount();
+	int queryAttempts = ewArray[objectNumber-1].getGuessCount();
 	return queryAttempts;
 }
 
-void FindFault::addEW(EncryptWord& ew) {
+// Definition: method responsible for creating array to size specified in application and assigns
+// object
+void FindFault::addEW(int position) {
+	EncryptWord ew;
 	if (ewArray == NULL) {
-		ewArray = new EncryptWord[1];
-		ewArray[0] = ew;
-	}
-	else {
-		EncryptWord* temp = ewArray;
 		ewArray = new EncryptWord[getArraySize()];
+		ewArray[0] = ew;
 
-		for (int i = 0; i < getArraySize(); ++i) {
-			ewArray[i] = temp[i];
-		}
-		ewArray[getArraySize()] = ew;
-		delete[] temp;
-		temp = nullptr;
 	}
+	else 
+		ewArray[position - 1] = ew;
+	
 }
 
-void FindFault::addPhrase(string phrase) {
+void FindFault::addPhrase(string phrase, int position) {
 	if (phraseArray == NULL) {
-		phraseArray = new string[1];
+		phraseArray = new string[getArraySize()];
 		phraseArray[0] = phrase;
 	}
-	else {
-		string* temp = phraseArray;
-		phraseArray = new string[getArraySize()];
-
-		for (int i = 0; i < getArraySize(); ++i) {
-			phraseArray[i] = temp[i];
-		}
-		phraseArray[getArraySize()] = phrase;
-		delete[] temp;
-		temp = nullptr;
-	}
+	else 
+		phraseArray[position - 1] = phrase;
 }
 
-void FindFault::setArraySize() {
-	this-> arraySize++;
+void FindFault::setArraySize(int size)  {
+	this->arraySize = size;
 }
 
 string FindFault::corruptionPossible(string phrase) {
@@ -89,18 +84,6 @@ string FindFault::corruptionPossible(string phrase) {
 	}else
 	return phrase;
 }
-
-/*necessary???
-EncryptWord FindFault::getEW(int ewNumber) {
-	EncryptWord ew;
-	return ew;
-}
-
-string FindFault::getPhrase(int phraseNumber) {
-	string phrase;
-	return phrase;
-}
-*/
 
 int FindFault::comparePhrases(int phraseNumber) {
 	if (ewArray[phraseNumber].getPhrase() == phraseArray[phraseNumber]) {

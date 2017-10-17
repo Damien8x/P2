@@ -1,6 +1,6 @@
 // Author: Damien Sudol
-// Filename: EncryptWord P1
-// Date: 10/10/2017
+// Filename: EncryptWord P2
+// Date: 10/16/2017
 // Version: 1.1
 //
 // Description: class aims to provide functions in a logical, efficient format, capable of encrypting passed strings greater than 3 characters, using a caesar cryptic shift.
