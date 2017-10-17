@@ -6,15 +6,18 @@
 #include <iostream>
 #include "EncryptWord.h"
 using namespace std;
-// Description: class aims to provide functions in a logical, efficient format, capable of encrypting, and containing multiple objects which are passed strings greater than 3 characters, using a caesar cryptic shift.
+// Description: class aims to provide functions in a logical, efficient format, capable of encrypting and containing multiple objects which are passed strings greater than 3 characters, using a caesar cryptic shift.
 // In addition, class provides necessary functions to fascilitate a guessing game from passed data in relation to the shift value used during encryption. Upon
 // identifying the correct shift value, helper methods will determine if corruption had occured during encryption.
 // Statistics are also provided for query attempts to determine the shift key and corruption. Minimal error handling provided through the class.
 // Error handling on the application side will be necessary to maintain integrity of the program. Access to the encrypt() method 
 // will be dependent on the internal state of the object, details  of dependencies are presented and defined below for the encrypt() method. 
 //
-// Assumptions: class will be utilized for its intended purporse of encryption followed by an interactive guessing game which provides statitical feedback. Failure to succesfuly encrypt
-// a phrase prior to calling checkShift() method or any accesor methods will yield insignifcant data.  Error handling will consist of pre-determined return values stated below, indicating errors have occured.
+// Assumptions: class will be utilized for its intended, first and foremost by providing a FindFault object with the desired amount of EncryptWord objects to be created, by using the FindFault.setArraySize() method.
+// Array size must be set prior to any encryption. Once encryption has been called the array will be set to the argument last provided to FindFault.setArraySize().
+// This means the number of objects for the given FindFault object will be locked in after the first FindFault.encrypt() method is called. After size of array has been set
+// encryption of any distinct object will be permitted, followed by an interactive guessing game which provides statitical feedback for each contained EncryptWord object. Failure to succesfuly encrypt
+// a phrase prior to calling FindFault.detectCorruption() method or any accesor methods will yield insignifcant data.  Error handling will consist of pre-determined return values stated below, indicating errors have occured.
 // Application programmers must handle, and review all preconditions to avaoid improper data and ensure object integrety.  All public funtions are necessary for 
 // succesful implementation of the classes intended use. Please review all definitions, pre and post conditions outlined below.
 
@@ -62,6 +65,8 @@ public:
 	// precondition: accepts unsigned integer value
 	// postcondition: attribute arraySize will be set to the value of passed argument.
 	void setArraySize(int);
+	// Definition: Destructor called at end of program to free up all heap allocated memory. Will delete both dynamic arrays from heap and set pointers 
+	// to point to NULL.
 	~FindFault();
 
 private:
@@ -72,7 +77,6 @@ private:
 	void addEW(int);
 	void addPhrase(string, int);
 	string corruptionPossible(string);
-	int comparePhrases(int);
-	
+	int comparePhrases(int) const;	
 };
 

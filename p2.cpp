@@ -14,25 +14,32 @@ int main() {
 	ff.setArraySize(6);
 	cout << ff.encrypt("aaaaAAAzZ", 1) << endl;
 	cout << ff.encrypt("DAFDSFA", 2) << endl;
-	cout << ff.encrypt("ASDLFADFLAFsadfsfassasdfa", 2) << endl;
+	cout << ff.encrypt("ASDLFADFLAFsadfsfassasdfa", 3) << endl;
+	cout << ff.encrypt("How dod you like this now", 4) << endl;
 	cout << ff.getArraySize() << endl;
 	
 	for (int i = 1; i < 10; i++) {
-		if (ff.detectCorruption(1, i) == 1) {
+		int test = ff.detectCorruption(2, i);
+		if (test == 1) {
 			cout << "too high" << endl;
 		}
-		else if (ff.detectCorruption(1, i) == -1) {
+		else if (test == -1) {
 			cout << "too low" << endl;
 		}
-		else if (ff.detectCorruption(1, i) == 5) {
+		else if (test == 5) {
 			cout << "No corruption" << endl;
 		}
-		else if (ff.detectCorruption(1, i) == 6) {
+		else if (test == 6) {
 			cout << "CORRUPTION" << endl;
 		}
-		else
+		else if (test== -2) {
 			cout << "error";
+		}
+		else if (test== 0) {
+			cout << "huh?";
+		}
 	}
+	cout << ff.checkQueryAttempts(2);
 	cin.get();
 	return 0;
 }
