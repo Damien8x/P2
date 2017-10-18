@@ -15,7 +15,10 @@
 // Application programmers must handle review all preconditions to avaoid improper data and ensure preconditions are met for object integrety.  All public funtions are necessary for 
 // succesful implementation of the classes intended use. Please review all definitions, pre and post conditions listed below.
 
-#include <iostream>
+// #include <iostream>
+#ifndef ENCRYPTWORD_H
+#define ENCRYPTWORD_H
+#include <string>
 using namespace std;
 
 class EncryptWord
@@ -131,3 +134,5 @@ private:
 
 	string encryptPhrase;	
 };
+
+#endif

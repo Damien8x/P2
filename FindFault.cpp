@@ -4,6 +4,7 @@
 // Version: 1.1
 
 #include "FindFault.h"
+
 // Definition: class designed to implement all features laid out in FindFault.h, with focus on containment, composition and class maintenance.
 // class is responsible for encapsulating several distinct EncryptWord objects using a dynamic array, with a size assigned by application. A FindFault object
 // will be capable of encryption and decryption by utilizinig the EncryptWord class, through composition. Class will also add a notion of corruption, which
@@ -51,7 +52,7 @@ int FindFault::detectCorruption(int objectNumber, int guess) {
 	return relativeShift;
 }
 
-int FindFault::checkQueryAttempts(int objectNumber) {
+int FindFault::checkQueryAttempts(int objectNumber) const {
 	int queryAttempts = ewArray[objectNumber-1].getGuessCount();
 	return queryAttempts;
 }
@@ -118,8 +119,6 @@ int FindFault::comparePhrases(int phraseNumber) const{
 
 FindFault::~FindFault()
 {
-	delete ewArray;
-	ewArray = nullptr;
-	delete phraseArray;
-	phraseArray = nullptr;
+	delete [] ewArray;
+	delete [] phraseArray;
 }
