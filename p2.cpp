@@ -11,56 +11,84 @@
 // a call to the FindFault.encrypt() method, thus setting a limit to the number of EncryptWord objects contained in the FindFault object. Multiple, distinct
 // FindFault objects will be created and maintained to ensure objects retain an independent identity and are not impacted by one another. 
 
+void printIfElementCorrupted(FindFault &, int);
+void addAndEncrypt(FindFault &, string);
+void printNumberOfElements(FindFault&);
+void printNumberOfQueries(FindFault&);
+
+
 
 
 int main() {
 	// call to FindFault constructor, creating FindFault object ff capable of accessing FindFault public methods
 	// expected output n/a
 	FindFault ff;
-	// Definition: setting dynamic array size to 6, allowing for 6 objects to be created and managed.
-	
-	
-	// expected ouput: n/a
-	cout << ff.getArraySize() << endl;
-	
-	// Definition: create first element of EncryptWord array.
-	// first argument: phrase to be encrypted and returned. 2nd argument: position in array for object to be asssigned to.
-	// expected output: encryption of first argument
-	cout << ff.encrypt("aaaaAAAzZ") << endl;
-	cout << ff.getArraySize() << endl;
-	
-	// Defintion: create second element of EncryptWord array.
-	// first argument: phrase to be encrypted and returned. 2nd argument: position in array for object to be asssigned to.
-	// expected output: encryption of first argument
-	cout << ff.encrypt("DAFDSFA") << endl;
-	cout << ff.getArraySize() << endl;
-	
-	// Definition: create thrid element of EncryptWord array.
-	// first argument: phrase to be encrypted and returned. 2nd argument: position in array for object to be asssigned to.
-	// expected output: encryption of first argument
-	cout << ff.encrypt("ASDLFADFLAFsadfsfassasdfa") << endl;
-	cout << ff.getArraySize() << endl;
-	
-	// Definition: create fourth element of EncryptWord array.
-	// first argument: phrase to be encrypted and returned. 2nd argument: position in array for object to be asssigned to.
-	// expected output: encryption of first argument
-	cout << ff.encrypt("How dod you like this now") << endl;
-	cout << ff.getArraySize() << endl;
-	// Definition: returns number of calls to FindFault.detectCorruption();
-	// expected output: expect return value of 9 based on above for loop for 2nd object in array.
-	if (ff.detectCorruption(1) == true) {
-		cout << "NO CORRUPTION" << endl;
-	}else
-		cout<<"CORRUPTION";
+	// expected number of elements for object ff: 0
+	printNumberOfElements(ff);
+	// expect number of queries for object ff: 0
+	printNumberOfQueries(ff);
+	// expected number of elements for object ff: 1
+	addAndEncrypt(ff, "ABC123 abc123");
+	// expected number of elements for object ff: 2
+	addAndEncrypt(ff, "Scoobie Doobie Doo");
+	printIfElementCorrupted(ff, 1);
+	// expected number of queries for object ff: 1
+	printNumberOfQueries(ff);
+	printIfElementCorrupted(ff, 2);
+	// expected number of queries for object ff: 2
+	printNumberOfQueries(ff);
+	// create 2nd FindFault object, independent of existing FindFault object
+	FindFault ff2;
+	// expected number of elements for object ff2: 0
+	printNumberOfElements(ff2);
+	// expected number of elements for object ff2: 1
+	addAndEncrypt(ff2, "Testing that encryptioooon");
+	// expected number of elements for object ff2: 2
+	addAndEncrypt(ff2, "tst spcl kys !@#$%^&");
 
-	if (ff.detectCorruption(2) == true) {
-		cout << "NO CORRUPTION" << endl;
-	}
-	else
-		cout << "CORRUPTION";
-
-	cout << ff.getQueryAttempts();
-	
+	printIfElementCorrupted(ff2, 2);
+	//expected number of queries for object ff2: 1
+	printNumberOfQueries(ff2);
 	cin.get();
 	return 0;
+}
+
+void printNumberOfQueries(FindFault& ffobject) {
+	cout << "Number of queries for corruption detection: " << ffobject.getQueryAttempts() << endl;
+	cout << "**********************************************" << endl;
+}
+// Definition: Check number of elements (EncryptWord objects) stored by FindFault object
+// precondition: none
+// modify: none
+// expected output: Number of EncryptWord objects ontained within FindFault object
+void printNumberOfElements(FindFault& ffobject) {
+	cout << "Number of elements: " << ffobject.getNumberOfElements() << endl;
+	cout << "**********************************************" << endl;
+
+}
+// Defintion: Adding EncryptWord object to container which will be accesible by its associated element number. encypted string will be printed,
+// next line indicates number of elements in container/associated element number.
+// precondition: object may be ON or OFF for encyption
+// modify: adding two elements to heap memory; passed string argument, and new EncryptWord object. FindFault.numberOfElements will increase by 1
+// expected output: encrypted string , number of elements contained in ff object
+void addAndEncrypt(FindFault &ffobject, string encryptWord) {
+	cout << ffobject.encrypt(encryptWord) << endl;
+	cout << "Element Number: " << ffobject.getNumberOfElements() << endl;
+	cout << "**********************************************" << endl;
+}
+
+// Defintion: Detects whether corruption had occured during the encryption process. prints corrupted, decrypted string if corruption has occured.
+// precondtion: none
+// modify: none
+// expected output: Element Number, Whether corruption has occured, corrupted string if corruption has occured.
+void printIfElementCorrupted(FindFault &ffobject, int elementNumber) {
+	cout << "Element Number: " << elementNumber << endl;
+	if (ffobject.detectCorruption(elementNumber) == true) {
+		cout << "NOT CORRUPTED" << endl;
+	}
+	else {
+		cout << "CORRUPTED" << endl;
+		cout << ffobject.decrypt(elementNumber) << endl;
+	}
+	cout << "**********************************************" << endl;
 }

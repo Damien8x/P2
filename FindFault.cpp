@@ -18,32 +18,32 @@
 //FindFault.cpp constants are used to enhance readability and avoid hard coding.
 const bool NO_CORRUPTION = true;
 const bool CORRUPTION = false;
+const int INITIAL_NUMBER_OF_ELEMENTS = 0;
 
 // class attributes
-int arraySize;
+int numberOfElements;
 EncryptWord * ewArray;
 string * phraseArray;
 int queryAttempts;
 
 FindFault::FindFault()
 {
-	ewArray = new EncryptWord[2];
-	phraseArray = new string[2];
-	arraySize = 0;
+	ewArray = new EncryptWord[INITIAL_NUMBER_OF_ELEMENTS];
+	phraseArray = new string[INITIAL_NUMBER_OF_ELEMENTS];
+	numberOfElements = 0;
 	queryAttempts = 0;
 }
 
-int FindFault::getArraySize() const{
-	return arraySize;
+int FindFault::getNumberOfElements() const{
+	return numberOfElements;
 }
 
-
 string FindFault::encrypt(string phrase) {
-	setArraySize();
+	setNumberOfElements();
 	addEW();
 	addPhrase(phrase);
 	phrase = corruptionPossible(phrase);
-	phrase = ewArray[getArraySize() - 1].encrypt(phrase);
+	phrase = ewArray[getNumberOfElements() - 1].encrypt(phrase);
 	return phrase;
 }
 
@@ -52,77 +52,82 @@ int FindFault::getQueryAttempts() const{
 	return queryAttempts;
 }
 
+string FindFault::decrypt(int elementNumber)  const {
+	string decryptedPhrase = ewArray[elementNumber - 1].getPhrase();
+	return decryptedPhrase;
+}
+
+bool FindFault::detectCorruption(int elementNumber) {
+	setQueryAttempts();
+	if (ewArray[elementNumber - 1].getPhrase() == phraseArray[elementNumber - 1]) {
+		return NO_CORRUPTION;
+	}
+	else
+		return CORRUPTION;
+}
+
+// Definiton: adds 1 to attribute queryAttempts, per call to detectCorruption().
+// precondition: none
+// postcondition: queryAttempts increased by 1.
 void FindFault::setQueryAttempts() {
 	queryAttempts++;
 }
-// Definition: creates dynamic array to size specified by application from FindFault.setArraySize() method, if ewArray has NULL value.
-// adds EncryptWord object at position of current encryption, as specified by passed argument to FindFault.encrypt() method.
-// precondition: Legally accepts unsigned integer argument no larger than current value of getArraySize()
-// postcondition: may create dynamic array in heap memory, pointed to by ewArray pointer. Will add object to ewArray array.
-void FindFault::addEW() {
 
+// Definiton: method called per call to FindFault.encrypt() method. Creates new EncryptWord object and new temp array in heap memory with a size
+// of ewArray.size() + 1 to store additional element. all elements of ewArray are copied to temp array before ewArray deletes all heap elements. ewArray
+// then is pointed to the first element of the dynamic temp array before adding the new EncryptWord object to the last position of the array.
+// precondition: call to FindFault.encrypt() with string argument greater than 4 characters.
+// postcondition: ewArray elements deleted from heap. ewArray points to new array in heap with size increased by one element. ewArray adds new object to last position in array.
+void FindFault::addEW() {
 	EncryptWord ew;
 	EncryptWord * temp;
-	temp = new EncryptWord[getArraySize()];
-	for (int i = 0; i < (getArraySize()-1); i++) {
+	temp = new EncryptWord[getNumberOfElements()];
+	for (int i = 0; i < (getNumberOfElements()-1); i++) {
 		temp[i] = ewArray[i];
 	}
 	delete[] ewArray;
 	ewArray = temp;
-	ewArray[getArraySize() - 1] = ew;
-	
+	ewArray[getNumberOfElements()- 1] = ew;
 }
-
-// Definition: creates dynamic array to size specified by application from FindFault.setArrraySize() method, if phraseArray has Null value.
-// designed for method access to compare decrypted phrase to  original, testing for corruption. adds phrase at position of current object calling
-// FindFault.encrypt() method. 
-// precondition: Legally accepts type string and unsigned integer no larger than current value of getArrarySize()
-// postconditioin: may create dynamic array in heap memory, pointed to by phraseArray pointer. Will add string "phrase" to phraseArray array.
+// Definition: method called per call to FindFault.encrypt() method. Creates new temp array in heap memory with a size of phraseArray.size() + 1 to
+// store an additional element. all elements of phraseArray are copied to temp array before phraseArray deletes all heap elements. phraseArray
+// then is pointed to the first element of the dynamic temp array before adding the additional string to the last position of the array.
+// precondition: call to FindFault.encrypt() with string agrument greater than 4 characters.
+// postcondition: phraseArray elements deleted from heap. phraseArray points to new array in heap with size increased by one string element. 
+// phrase array adds new string to last position in array.
 void FindFault::addPhrase(string phrase) {
 	string * temp;
-	temp = new string[getArraySize()];
-	for (int i = 0; i < (getArraySize()-1); i++) {
+	temp = new string[getNumberOfElements()];
+	for (int i = 0; i < (getNumberOfElements()-1); i++) {
 		temp[i] = phraseArray[i];
 	}
 	delete[] phraseArray;
 	phraseArray = temp;
-	phraseArray[getArraySize() - 1] = phrase;
-	
+	phraseArray[getNumberOfElements() - 1] = phrase;
+}
+// Definition: method called per call to FindFault.encrypt() method. Tracks the number of EncryptWord elements contained in FindFault class by increasing
+// the value of numberOfElements attribute by one for each additonal EncryptWord stored.
+// precondition: call to FindFault.encrypt() method with legal argument.
+// postcondition: increase of FindFault.numberOfElements attribute by 1.
+void FindFault::setNumberOfElements()  {
+	numberOfElements++;
 }
 
-// Definition: mutator member function, responsible for setting class attribute arraySize to size of argument. ArraySize may be set multiple times prior to call
-// of FindFault.encrypt(), after which, the dynamic array has been set to size and will no longer be influenced by the method.
-// precondition: no prior call to FindFault.encrypt(). Legally accepts unsigned integer value above 0.
-// modify: changes value of attribute arraySize.
-// postcondition: arraySize set to argument value.
-void FindFault::setArraySize()  {
-	arraySize++;
-}
-
-// Definition: responsible for adding element of possible corruption to EncryptWorld object encryption. Using the length of phrase to be encrypted as the 
-// precursor to whether corruption will occur.
-// precondition: legal argument of type string passed from FindFault.encrypt() method.
-// postcondition: original argument may or may not be corrupted by method and then returned to FindFault.encrypt() method.
+// Defintion: method adds notion of possible corruption to the encryption process. If a string has an even length it will not be corrupted. If a string has
+// a uneven length corruption may happen. If phrase.length() has a value not divisible by 4, the character of "phrase" equal to the remainder will be set to the ASCII value of
+// the remainder * 30.
+// precondition: call to FindFault.encrypt() with legal argument.
+// postcondition: value returned will be passed to contained EncryptWord.encrypt(string) method. 
 string FindFault::corruptionPossible(string phrase) {
-	if (phrase.length() % 2 == 0) {
-		// insert Corruption
+	if (phrase.length() % 2 != 0) {
+		int corruption = (phrase.length() % 4);
+		phrase[corruption] = corruption * 35;
 		return phrase;
 	}else
 	return phrase;
 }
 
-// Definition: method call triggered by application succesful identification of shift value. compares returned decrypted phrase from EncryptWord object
-// to original phrase, determining if corruption had occured. Return values will be passed to FindFault.detectCorruption() method.
-// precondition: legally accepts unsigned integer value between 1 and the value of ewArray.length();
-// postcondition: returns either 5 (no corruption) or 6 (corruption).
-bool FindFault::detectCorruption(int ewNumber) {
-	setQueryAttempts();
-	if (ewArray[ewNumber - 1].getPhrase() == phraseArray[ewNumber - 1]) {
-		return NO_CORRUPTION;
-	} else
-	return CORRUPTION;
-}
-
+// Defintioin: destructor. last called function of program, frees up any remaining allocated heap memory.
 FindFault::~FindFault()
 {
 	delete [] ewArray;

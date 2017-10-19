@@ -7,7 +7,7 @@
 #define FINDFAULT_H
 
 #include "EncryptWord.h"
-//#include <iostream>
+#include <iostream>
 #include <string>
 using namespace std;
 // Description: class aims to provide functions in a logical, efficient format, capable of encrypting and containing multiple objects which are passed strings greater than 3 characters, using a caesar cryptic shift.
@@ -30,11 +30,13 @@ using namespace std;
 // succesful implementation of the classes intended use. Please review all definitions, pre and post conditions outlined below.
 // 
 // State Transitions
-// OFF-> OFF (constructor -> getArraySize())
-// OFF-> OFF (constructor-> CheckQueryAttempts())
-// OFF-> ON  (constructor -> setArraySize())
-// ON-> ON (setArraySize() -> encrypt())
-// ON-> ON (encrypt() -> detectCorruption())
+// OFF-> OFF (constructor -> getNumberOfElements())
+// OFF-> OFF (constructor-> getQueryAttempts())
+// OFF-> ON (constructor -> encrypt())
+// ON-> ON (encrypt() -> getQueryAttempts())
+// ON-> ON (encrypt() -> encrypt())
+// ON-> ON (Encrypt() -> getNumberOfElements())
+// ON-> ON (encrypt() -> detectCorruption()) 
 // 
 
 
@@ -45,60 +47,48 @@ public:
 	// precondition: constructor accepts no arguments. state of object is not applicable prior to call.
 	// postcondition: object initialized with default values.  All object attributes are private and cannot be directly accessed.
 	FindFault();
-	// Definition: Returns size of array associated with the number of EncryptWord objects held. Default value of 0.
-	// precondition: None. Will return a default of 0 if FindFault.arraySize() has not been set in application.
-	// postcondition:state of object not impacted. returns length of array containing EncryptWord objects. 
-	int getArraySize() const;
-	// Definition: method accepts argument of type string, with a minimum of 4 characters. passed string will be returned as an encrypted string, pending condtions are met. encryption 
-	// will shift characters according to the "shift", a randomly generated value between 1 and 9. if "shift" value is equal to "3" all characters of passed string will
-	// increment by "3" according to associated ascii value, and returned as the newly associated character; for instance, the character 'a' = 97(ascii value) will shift 3 and returned as 
-	// 'd' = 100(ascii). If character in passed string is "shifted" beyond the english alphabet, according to new ascii value, shift will wrap back to beginning of alphabelt; for instance, the character 'y' = 121(ascii value) with  
-	// a shift of "3" will be returned as "b"= 98 (ascii value). any characters of passed string outside of english alphabelt, including numbers and special characters, will 
-	// shift without wrapping, aside from empty spaces, which will be returned equal to themselves.  If encryption takes place, internal states will change and reuse of the function will be disabled,
-	// getPhrase() will return the encrypted phrase until either checkShift() is passed the value equal to the encrypted shift value provided.
-	// method accepts two arguments of type string, and integer.The integer value will correspond to the associated object to modify, related to the users chosen array size of EncryptWord objects per the setArraySize() function.
-	// String argument requires a minimum of 4 characters for succesful encryption. Succesful encryption will disable re-use of the function and set the return
-	// value of getPhrase() to the newly encrypted phrase. 
-	// precondition: object is "ON". FindFault.setArraySize() must have been previously set to a size equal to or larger than the second argument.
-	// postcondition: returns encrypted string argument according to the associated shift value. A string return of -1 indicates minimal size of argument is not met. A return value of -2 indicates encryption has been disabled.
-	// object state impacted: element added to ewArray(), phraseArray()
+	// Definition: returns number of EncryptWord objects contained in FindFault class. Method should be referenced to determine
+	// legal argument boundries for FindFault.decrypt() method, FindFault.detectCorruption() method. 
+	// precondition: none
+	// postcondition: FindFault object not impacted. 
+	int getNumberOfElements() const;
+	// Definition: takes in string, returns encrypted string via creation of EncryptWord object and call to EncryptWord.encrypt() method. 
+	// For all queries for related element, a call to FindFault.getNumberOfElements() prior to any additional calls to FindFault.encrypt() method
+	// will return the positon associated with THIS object. 
+	// precondition: object may or may not be ON. string argument must be greater than 4 characters.
+	// postcondition: FindFault.numberOfElements will increase by 1. New EncryptWord object will be created in heap memory. New string will be 
+	// stored in heap memory.
 	string encrypt(string);
-	// Definition: assumed that method will be used as a tool to determine value of the encryption "shift" used in encrypt(string). method has five possible integer return values
-	// which relate to the integer values passed to method and the current EncryptWord "shift" value. -1 will be returned if passed argument is less than "shift" value,
-	// 1 will be returned if passed argument is greater than "shift" value, value 2 will be returned if argument is invalid or out of bounds, value of 6 will be returned if shift value
-	// has been correctly identified but corruption has occured during encryption, value of 5 will be returned if the shift key has been correctly identified and no corruption has occured.
-	// Returned value can be utilized in application to guide user's guesses towards the "shift value". 
-	// detectCorruption method tracks data, keeping track of every query until shift is identified and corruption determined.
-	// Out of bounds or invalid integer arguments will return a value of 2, indicating an error, and must be handled by the application programmer.
-	// Method accepts two integer arguments, firt relating to the associated object and the second, the users "guess" of shift value. 
-	// Dependent on EncryptWord.encrypt() function. 
-	// precondition: Object is "ON". FindFault.arraySize() must have been previously set to a size equal to or larger than the second argument.
-	// legal arguments: first integer must be of value associated to object which has called the encrypt() method.
-	// second integer argument must be between 1 and 9.
-	// postcondition: return integer value of -1, 1, 2, 5, 6 . QueryCount will increase by one for each method call.
+	// Definition: returns number of calls to FindFault.detectCorruption() method, creating an up to date reference for corruption query attempts.
+	// This method returns a value for ALL query calls to FindFault.detectCorruption method, not object specific.
+	// precondition: none
+	// postcondition: FindFault object not impacted. 
 	int getQueryAttempts() const;
-	// Definition: integral method to class which dictates the size of the dynamic array used to encapsulate EncryptWord objects.
-	// method may be called multiple times prior to FindFault.encrypt() method. call to method post call to FindFault.encrypt() will not
-	// impact the number of EncryptWord objects possible for containment.
-	// precondition: Object may or may not be "on". accepts unsigned integer value
-	// postcondition: attribute arraySize will be set to the value of passed argument.
+	// Definition: detects whether corruption has occured during the encryption process. A return of true indicates no corruption has occured.
+	// A return type of false indicates corruption has occured. Legal argument boundries: lower: greater than zero. upper: less than or equal to FindFault.getNumberOfElements()
+	// precondition: object ON (getNumberrOfElements() > 0). argument is unsigned integer within legal bounds.
+	// postcondition: FindFault.queryAttempts will increase by 1. 
 	bool detectCorruption(int);
-	void setArraySize();
+	// Defintion: returns FindFault contained EncryptWord object's decrypted string, associated with the passed argument. 
+	// returned string may or may not have been corrupted during encryption. Legal argument boundries: lower: greater than zero. upper: less than or equal to FindFault.getNumberOfElements()
+	// precondition: object ON (getNumberrOfElements() > 0). argument is unsigned integer within legal bounds.
+	// postcondition: FindFault object not impacted.
+	string decrypt(int) const;
 	// Definition: Destructor called at end of program to free up all heap allocated memory. Will delete both dynamic arrays from heap and set pointers 
 	// to point to NULL.
 	~FindFault();
  
 private:
+	void setNumberOfElements();
 	int queryAttempts;
-	int arraySize;
+	int numberOfElements;
 	void setQueryAttempts();
 	EncryptWord * ewArray;
 	string * phraseArray;
 	string phrase;
 	void addEW();
 	void addPhrase(string);
-	string corruptionPossible(string);
-		
+	string corruptionPossible(string);		
 };
 
 #endif
