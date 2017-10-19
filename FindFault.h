@@ -62,7 +62,7 @@ public:
 	// precondition: object is "ON". FindFault.setArraySize() must have been previously set to a size equal to or larger than the second argument.
 	// postcondition: returns encrypted string argument according to the associated shift value. A string return of -1 indicates minimal size of argument is not met. A return value of -2 indicates encryption has been disabled.
 	// object state impacted: element added to ewArray(), phraseArray()
-	string encrypt(string, int);
+	string encrypt(string);
 	// Definition: assumed that method will be used as a tool to determine value of the encryption "shift" used in encrypt(string). method has five possible integer return values
 	// which relate to the integer values passed to method and the current EncryptWord "shift" value. -1 will be returned if passed argument is less than "shift" value,
 	// 1 will be returned if passed argument is greater than "shift" value, value 2 will be returned if argument is invalid or out of bounds, value of 6 will be returned if shift value
@@ -76,31 +76,29 @@ public:
 	// legal arguments: first integer must be of value associated to object which has called the encrypt() method.
 	// second integer argument must be between 1 and 9.
 	// postcondition: return integer value of -1, 1, 2, 5, 6 . QueryCount will increase by one for each method call.
-	int detectCorruption(int, int);
-	// Definition: returns number of calls to detectCorruption() method for each independant EncryptWord object.
-	// function is dependent on EncryptWord.getGuessCount() for retrieval of statistics.
-	// precondition: integer argument is the position of the intended object to query against in the ewArray.
-	// postcondition: returns an integer value.
-	int checkQueryAttempts(int) const;
+	int getQueryAttempts() const;
 	// Definition: integral method to class which dictates the size of the dynamic array used to encapsulate EncryptWord objects.
 	// method may be called multiple times prior to FindFault.encrypt() method. call to method post call to FindFault.encrypt() will not
 	// impact the number of EncryptWord objects possible for containment.
 	// precondition: Object may or may not be "on". accepts unsigned integer value
 	// postcondition: attribute arraySize will be set to the value of passed argument.
-	void setArraySize(int);
+	bool detectCorruption(int);
+	void setArraySize();
 	// Definition: Destructor called at end of program to free up all heap allocated memory. Will delete both dynamic arrays from heap and set pointers 
 	// to point to NULL.
 	~FindFault();
-
+ 
 private:
+	int queryAttempts;
 	int arraySize;
+	void setQueryAttempts();
 	EncryptWord * ewArray;
 	string * phraseArray;
 	string phrase;
-	void addEW(int);
-	void addPhrase(string, int);
+	void addEW();
+	void addPhrase(string);
 	string corruptionPossible(string);
-	int comparePhrases(int) const;	
+		
 };
 
 #endif

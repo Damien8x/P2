@@ -18,54 +18,49 @@ int main() {
 	// expected output n/a
 	FindFault ff;
 	// Definition: setting dynamic array size to 6, allowing for 6 objects to be created and managed.
+	
+	
 	// expected ouput: n/a
-	ff.setArraySize(6);
+	cout << ff.getArraySize() << endl;
+	
 	// Definition: create first element of EncryptWord array.
 	// first argument: phrase to be encrypted and returned. 2nd argument: position in array for object to be asssigned to.
 	// expected output: encryption of first argument
-	cout << ff.encrypt("aaaaAAAzZ", 1) << endl;
+	cout << ff.encrypt("aaaaAAAzZ") << endl;
+	cout << ff.getArraySize() << endl;
+	
 	// Defintion: create second element of EncryptWord array.
 	// first argument: phrase to be encrypted and returned. 2nd argument: position in array for object to be asssigned to.
 	// expected output: encryption of first argument
-	cout << ff.encrypt("DAFDSFA", 2) << endl;
+	cout << ff.encrypt("DAFDSFA") << endl;
+	cout << ff.getArraySize() << endl;
+	
 	// Definition: create thrid element of EncryptWord array.
 	// first argument: phrase to be encrypted and returned. 2nd argument: position in array for object to be asssigned to.
 	// expected output: encryption of first argument
-	cout << ff.encrypt("ASDLFADFLAFsadfsfassasdfa", 3) << endl;
+	cout << ff.encrypt("ASDLFADFLAFsadfsfassasdfa") << endl;
+	cout << ff.getArraySize() << endl;
+	
 	// Definition: create fourth element of EncryptWord array.
 	// first argument: phrase to be encrypted and returned. 2nd argument: position in array for object to be asssigned to.
 	// expected output: encryption of first argument
-	cout << ff.encrypt("How dod you like this now", 4) << endl;
-	// Defintion: returns last size assigned to FindFault.setArraySize()
-	// expected output: 6
+	cout << ff.encrypt("How dod you like this now") << endl;
 	cout << ff.getArraySize() << endl;
-	// Definiton: for loop designed to test FindFault.detectCorruption() for all
-	// possible integer values (1-9). possible return values of function are based on
-	// relation to shift value. See FindFault.h for return value key.
-	for (int i = 1; i < 10; i++) {
-		int test = ff.detectCorruption(2, i);
-		if (test == 1) {
-			cout << "too high" << endl;
-		}
-		else if (test == -1) {
-			cout << "too low" << endl;
-		}
-		else if (test == 5) {
-			cout << "No corruption" << endl;
-		}
-		else if (test == 6) {
-			cout << "CORRUPTION" << endl;
-		}
-		else if (test== -2) {
-			cout << "error";
-		}
-		else if (test== 0) {
-			cout << "huh?";
-		}
-	}
 	// Definition: returns number of calls to FindFault.detectCorruption();
 	// expected output: expect return value of 9 based on above for loop for 2nd object in array.
-	cout << ff.checkQueryAttempts(2);
+	if (ff.detectCorruption(1) == true) {
+		cout << "NO CORRUPTION" << endl;
+	}else
+		cout<<"CORRUPTION";
+
+	if (ff.detectCorruption(2) == true) {
+		cout << "NO CORRUPTION" << endl;
+	}
+	else
+		cout << "CORRUPTION";
+
+	cout << ff.getQueryAttempts();
+	
 	cin.get();
 	return 0;
 }

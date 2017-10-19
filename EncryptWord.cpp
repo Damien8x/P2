@@ -260,11 +260,11 @@ bool EncryptWord::getOn() const {
 }
 
 string EncryptWord::getPhrase() const {
-	if (on == true) {
+	
 		return phrase;
-	}
-	else
-		return encryptPhrase;
+}
+string EncryptWord::getEncryptPhrase() const {
+	return encryptPhrase;
 }
 
 int EncryptWord::getGuessCount() const{

@@ -92,6 +92,12 @@ public:
 	// postcondition: encryptedPhrase or phrase returned
 	string getPhrase() const;
 
+	// defintion: dependent on succesful encryption using encrypt() method. if argument has been succesfully encrypted, objectReset() has not been called,
+	// checkShift() has not been passed integer equal to shift value, then return value will be encrypted; else, return value will be decrypted
+	// precondition: n/a
+	// postcondition: encryptedPhrase or phrase returned
+	string getEncryptPhrase() const;
+
 private:
 
 	void setShift(int);
