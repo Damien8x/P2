@@ -16,10 +16,13 @@ void addAndEncrypt(FindFault &, string);
 void printNumberOfElements(FindFault&);
 void printNumberOfQueries(FindFault&);
 
-
-
-
 int main() {
+
+	cout << "*************************************************\n*WELCOME TO FIND FAULT TEST DRIVER!!\t\t*\n""*CPSC 5011 PROJECT 2\t\t\t\t*\n"<<
+		"*AUTHOR: DAMIEN SUDOL\t\t\t\t*\n*************************************************" << endl;
+
+
+
 	// call to FindFault constructor, creating FindFault object ff capable of accessing FindFault public methods
 	// expected output n/a
 	FindFault ff;
@@ -49,13 +52,27 @@ int main() {
 	printIfElementCorrupted(ff2, 2);
 	//expected number of queries for object ff2: 1
 	printNumberOfQueries(ff2);
+
+	cout << ff.printCorruption(1) << endl;
+	cout << "*************************************************" << endl;
+	cout << ff.printCorruption(2) << endl;
+	cout << "*************************************************" << endl;
+	cout << ff2.printCorruption(1) << endl;
+	cout << "*************************************************" << endl;
+	cout << ff2.printCorruption(2) << endl;
+	cout << "*************************************************" << endl;
+
+
+
+
+
 	cin.get();
 	return 0;
 }
 
 void printNumberOfQueries(FindFault& ffobject) {
 	cout << "Number of queries for corruption detection: " << ffobject.getQueryAttempts() << endl;
-	cout << "**********************************************" << endl;
+	cout << "*************************************************" << endl;
 }
 // Definition: Check number of elements (EncryptWord objects) stored by FindFault object
 // precondition: none
@@ -63,7 +80,7 @@ void printNumberOfQueries(FindFault& ffobject) {
 // expected output: Number of EncryptWord objects ontained within FindFault object
 void printNumberOfElements(FindFault& ffobject) {
 	cout << "Number of elements: " << ffobject.getNumberOfElements() << endl;
-	cout << "**********************************************" << endl;
+	cout << "*************************************************" << endl;
 
 }
 // Defintion: Adding EncryptWord object to container which will be accesible by its associated element number. encypted string will be printed,
@@ -74,7 +91,7 @@ void printNumberOfElements(FindFault& ffobject) {
 void addAndEncrypt(FindFault &ffobject, string encryptWord) {
 	cout << ffobject.encrypt(encryptWord) << endl;
 	cout << "Element Number: " << ffobject.getNumberOfElements() << endl;
-	cout << "**********************************************" << endl;
+	cout << "*************************************************" << endl;
 }
 
 // Defintion: Detects whether corruption had occured during the encryption process. prints corrupted, decrypted string if corruption has occured.
@@ -90,5 +107,5 @@ void printIfElementCorrupted(FindFault &ffobject, int elementNumber) {
 		cout << "CORRUPTED" << endl;
 		cout << ffobject.decrypt(elementNumber) << endl;
 	}
-	cout << "**********************************************" << endl;
+	cout << "*************************************************" << endl;
 }

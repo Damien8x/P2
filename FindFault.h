@@ -74,6 +74,8 @@ public:
 	// precondition: object ON (getNumberrOfElements() > 0). argument is unsigned integer within legal bounds.
 	// postcondition: FindFault object not impacted.
 	string decrypt(int) const;
+	
+	string printCorruption(int);
 	// Definition: Destructor called at end of program to free up all heap allocated memory. Will delete both dynamic arrays from heap and set pointers 
 	// to point to NULL.
 	~FindFault();

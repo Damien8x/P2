@@ -4,6 +4,7 @@
 // Version: 1.1
 
 #include "FindFault.h"
+#include <string>;
 
 // Definition: class designed to implement all features laid out in FindFault.h, with focus on containment, composition and class maintenance.
 // class is responsible for encapsulating several distinct EncryptWord objects using a dynamic array, with a size assigned by application. A FindFault object
@@ -64,6 +65,35 @@ bool FindFault::detectCorruption(int elementNumber) {
 	}
 	else
 		return CORRUPTION;
+}
+
+string FindFault::printCorruption(int elementNumber) {
+	int corruptCharNum = 0;
+	string corruption = "";
+	string originalChar;
+	string corruptChar;
+	string phrase = phraseArray[elementNumber - 1];
+	string ewphrase = ewArray[elementNumber - 1].getPhrase();
+	
+	if (detectCorruption(elementNumber) == true) {
+		corruption = "NO CORRUPTION \nElement Position:\t" + to_string(elementNumber) + "\nDecrypted String:\t" + ewphrase + "\nOriginal String:\t" + phrase;
+		return corruption;
+	}
+	else {
+		
+		for (int i = 0; i <= phrase.length(); i++) {
+			if (phrase[i] != ewphrase[i]) {
+				corruptCharNum = i + 1;
+				originalChar = phrase[i];
+				corruptChar = ewphrase[i];
+			}
+		}
+		corruption = "CORRUPTION DETECTED \nElement Position:\t"+ to_string(elementNumber) + "\nDecrypted String:\t" +
+					ewphrase + "\nCorruption Position:\tcharacter " + to_string(corruptCharNum) +
+					" \nCorrupted Character:\t" + corruptChar + "\nOriginal Character:\t" + originalChar;
+		
+	}
+	return corruption;
 }
 
 // Definiton: adds 1 to attribute queryAttempts, per call to detectCorruption().
