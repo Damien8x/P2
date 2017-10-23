@@ -47,15 +47,15 @@ string encryptPhrase;
 
 EncryptWord::EncryptWord()
 {
-	this-> shift = 0;
-	this-> on = true;
-	this-> guessCount = 0;
-	this-> avgGuess = 0;
-	this-> totalGuess = 0;
-	this-> highGuessCount = 0;
-	this-> lowGuessCount = 0;
-	this-> phrase = "";	
-	this-> encryptPhrase = "";
+	this->shift = 0;
+	this->on = true;
+	this->guessCount = 0;
+	this->avgGuess = 0;
+	this->totalGuess = 0;
+	this->highGuessCount = 0;
+	this->lowGuessCount = 0;
+	this->phrase = "";
+	this->encryptPhrase = "";
 }
 
 string EncryptWord::encrypt(string phrase)
@@ -112,7 +112,7 @@ string EncryptWord::encrypt(string phrase)
 
 int EncryptWord::checkShift(int guess)
 {
-	
+
 	if (guess == shift)
 	{
 		statistics(guess, 0);
@@ -122,7 +122,7 @@ int EncryptWord::checkShift(int guess)
 	else if (guess > shift  && guess < SHIFT_UPPER_BOUND)
 	{
 		statistics(guess, 1);
-		return HIGH_GUESS;	
+		return HIGH_GUESS;
 	}
 	else if (guess < shift && guess > SHIFT_LOWER_BOUND)
 	{
@@ -136,11 +136,11 @@ int EncryptWord::checkShift(int guess)
 
 void EncryptWord::objectReset()
 {
-	this-> guessCount = 0;
-	this-> avgGuess = 0;
-	this-> highGuessCount = 0;
-	this-> lowGuessCount = 0;
-	this-> shift = 0;
+	this->guessCount = 0;
+	this->avgGuess = 0;
+	this->highGuessCount = 0;
+	this->lowGuessCount = 0;
+	this->shift = 0;
 	this->totalGuess = 0;
 	setOn(true);
 	setPhrase("", "");
@@ -176,7 +176,7 @@ void EncryptWord::statistics(int guess, int relativeToShift)
 	setTotalGuess(guess);
 	setAvgGuess(getTotalGuess(), getGuessCount());
 
-	if (relativeToShift == 1) 
+	if (relativeToShift == 1)
 	{
 		setHighGuessCount();
 	}
@@ -199,8 +199,8 @@ void EncryptWord::setShift(int shift) {
 // modify: phrase and encryptPhrase
 // postcondition: change of object attributes phrase and encryptPhrase
 void EncryptWord::setPhrase(string phrase, string encryptPhrase) {
-		this->phrase = phrase;
-		this->encryptPhrase = encryptPhrase;
+	this->phrase = phrase;
+	this->encryptPhrase = encryptPhrase;
 }
 
 // Description: mutator member function, changes setTotalGuess. called from statistics() method
@@ -260,18 +260,18 @@ bool EncryptWord::getOn() const {
 }
 
 string EncryptWord::getPhrase() const {
-	
-		return phrase;
+
+	return phrase;
 }
 string EncryptWord::getEncryptPhrase() const {
 	return encryptPhrase;
 }
 
-int EncryptWord::getGuessCount() const{
+int EncryptWord::getGuessCount() const {
 	return guessCount;
 }
 
-int EncryptWord::getTotalGuess() const{
+int EncryptWord::getTotalGuess() const {
 	return totalGuess;
 }
 
@@ -282,6 +282,6 @@ double EncryptWord::getAvgGuess() const {
 int EncryptWord::getLowGuessCount() const {
 	return lowGuessCount;
 }
-int EncryptWord::getHighGuessCount() const{	
+int EncryptWord::getHighGuessCount() const {
 	return highGuessCount;
 }

@@ -22,6 +22,8 @@ const bool CORRUPTION = false;
 const int INITIAL_NUMBER_OF_ELEMENTS = 0;
 
 // class attributes
+int corruptedEncryption;
+int encryptionNotCorrupted;
 int numberOfElements;
 EncryptWord * ewArray;
 string * phraseArray;
@@ -32,10 +34,11 @@ FindFault::FindFault()
 	ewArray = new EncryptWord[INITIAL_NUMBER_OF_ELEMENTS];
 	phraseArray = new string[INITIAL_NUMBER_OF_ELEMENTS];
 	numberOfElements = 0;
-	queryAttempts = 0;
+	corruptedEncryption = 0;
+	encryptionNotCorrupted = 0;
 }
 
-int FindFault::getNumberOfElements() const{
+int FindFault::getNumberOfElements() const {
 	return numberOfElements;
 }
 
@@ -49,8 +52,11 @@ string FindFault::encrypt(string phrase) {
 }
 
 
-int FindFault::getQueryAttempts() const{
-	return queryAttempts;
+int FindFault::getQueryAttempts(bool corrupted) const {
+	if (corrupted == true) {
+		return encryptionNotCorrupted;
+	}
+	else return corruptedEncryption;
 }
 
 string FindFault::decrypt(int elementNumber)  const {
@@ -59,28 +65,30 @@ string FindFault::decrypt(int elementNumber)  const {
 }
 
 bool FindFault::detectCorruption(int elementNumber) {
-	setQueryAttempts();
 	if (ewArray[elementNumber - 1].getPhrase() == phraseArray[elementNumber - 1]) {
+		setQueryAttempts(NO_CORRUPTION);
 		return NO_CORRUPTION;
 	}
-	else
+	else {
+		setQueryAttempts(CORRUPTION);
 		return CORRUPTION;
+	}
 }
 
-string FindFault::printCorruption(int elementNumber) {
+string FindFault::printCorruption(int elementNumber) const {
 	int corruptCharNum = 0;
 	string corruption = "";
 	string originalChar;
 	string corruptChar;
 	string phrase = phraseArray[elementNumber - 1];
 	string ewphrase = ewArray[elementNumber - 1].getPhrase();
-	
-	if (detectCorruption(elementNumber) == true) {
+
+	if (phrase == ewphrase) {
 		corruption = "NO CORRUPTION \nElement Position:\t" + to_string(elementNumber) + "\nDecrypted String:\t" + ewphrase + "\nOriginal String:\t" + phrase;
 		return corruption;
 	}
 	else {
-		
+
 		for (int i = 0; i <= phrase.length(); i++) {
 			if (phrase[i] != ewphrase[i]) {
 				corruptCharNum = i + 1;
@@ -88,10 +96,9 @@ string FindFault::printCorruption(int elementNumber) {
 				corruptChar = ewphrase[i];
 			}
 		}
-		corruption = "CORRUPTION DETECTED \nElement Position:\t"+ to_string(elementNumber) + "\nDecrypted String:\t" +
-					ewphrase + "\nCorruption Position:\tcharacter " + to_string(corruptCharNum) +
-					" \nCorrupted Character:\t" + corruptChar + "\nOriginal Character:\t" + originalChar;
-		
+		corruption = "CORRUPTION DETECTED \nElement Position:\t" + to_string(elementNumber) + "\nDecrypted String:\t" +
+			ewphrase + "\nCorruption Position:\tcharacter " + to_string(corruptCharNum) +
+			" \nCorrupted Character:\t" + corruptChar + "\nOriginal Character:\t" + originalChar;
 	}
 	return corruption;
 }
@@ -99,8 +106,11 @@ string FindFault::printCorruption(int elementNumber) {
 // Definiton: adds 1 to attribute queryAttempts, per call to detectCorruption().
 // precondition: none
 // postcondition: queryAttempts increased by 1.
-void FindFault::setQueryAttempts() {
-	queryAttempts++;
+void FindFault::setQueryAttempts(bool corruption) {
+	if (corruption == true) {
+		corruptedEncryption++;
+	}
+	else encryptionNotCorrupted++;
 }
 
 // Definiton: method called per call to FindFault.encrypt() method. Creates new EncryptWord object and new temp array in heap memory with a size
@@ -112,12 +122,12 @@ void FindFault::addEW() {
 	EncryptWord ew;
 	EncryptWord * temp;
 	temp = new EncryptWord[getNumberOfElements()];
-	for (int i = 0; i < (getNumberOfElements()-1); i++) {
+	for (int i = 0; i < (getNumberOfElements() - 1); i++) {
 		temp[i] = ewArray[i];
 	}
 	delete[] ewArray;
 	ewArray = temp;
-	ewArray[getNumberOfElements()- 1] = ew;
+	ewArray[getNumberOfElements() - 1] = ew;
 }
 // Definition: method called per call to FindFault.encrypt() method. Creates new temp array in heap memory with a size of phraseArray.size() + 1 to
 // store an additional element. all elements of phraseArray are copied to temp array before phraseArray deletes all heap elements. phraseArray
@@ -128,7 +138,7 @@ void FindFault::addEW() {
 void FindFault::addPhrase(string phrase) {
 	string * temp;
 	temp = new string[getNumberOfElements()];
-	for (int i = 0; i < (getNumberOfElements()-1); i++) {
+	for (int i = 0; i < (getNumberOfElements() - 1); i++) {
 		temp[i] = phraseArray[i];
 	}
 	delete[] phraseArray;
@@ -139,7 +149,7 @@ void FindFault::addPhrase(string phrase) {
 // the value of numberOfElements attribute by one for each additonal EncryptWord stored.
 // precondition: call to FindFault.encrypt() method with legal argument.
 // postcondition: increase of FindFault.numberOfElements attribute by 1.
-void FindFault::setNumberOfElements()  {
+void FindFault::setNumberOfElements() {
 	numberOfElements++;
 }
 
@@ -153,13 +163,14 @@ string FindFault::corruptionPossible(string phrase) {
 		int corruption = (phrase.length() % 4);
 		phrase[corruption] = corruption * 35;
 		return phrase;
-	}else
-	return phrase;
+	}
+	else
+		return phrase;
 }
 
 // Defintioin: destructor. last called function of program, frees up any remaining allocated heap memory.
 FindFault::~FindFault()
 {
-	delete [] ewArray;
-	delete [] phraseArray;
+	delete[] ewArray;
+	delete[] phraseArray;
 }

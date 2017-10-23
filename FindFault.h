@@ -63,7 +63,7 @@ public:
 	// This method returns a value for ALL query calls to FindFault.detectCorruption method, not object specific.
 	// precondition: none
 	// postcondition: FindFault object not impacted. 
-	int getQueryAttempts() const;
+	int getQueryAttempts(bool) const;
 	// Definition: detects whether corruption has occured during the encryption process. A return of true indicates no corruption has occured.
 	// A return type of false indicates corruption has occured. Legal argument boundries: lower: greater than zero. upper: less than or equal to FindFault.getNumberOfElements()
 	// precondition: object ON (getNumberrOfElements() > 0). argument is unsigned integer within legal bounds.
@@ -74,23 +74,24 @@ public:
 	// precondition: object ON (getNumberrOfElements() > 0). argument is unsigned integer within legal bounds.
 	// postcondition: FindFault object not impacted.
 	string decrypt(int) const;
-	
-	string printCorruption(int);
+
+	string printCorruption(int) const;
 	// Definition: Destructor called at end of program to free up all heap allocated memory. Will delete both dynamic arrays from heap and set pointers 
 	// to point to NULL.
 	~FindFault();
- 
+
 private:
 	void setNumberOfElements();
-	int queryAttempts;
 	int numberOfElements;
-	void setQueryAttempts();
+	void setQueryAttempts(bool);
 	EncryptWord * ewArray;
 	string * phraseArray;
 	string phrase;
 	void addEW();
 	void addPhrase(string);
-	string corruptionPossible(string);		
+	string corruptionPossible(string);
+	int corruptedEncryption;
+	int encryptionNotCorrupted;
 };
 
 #endif
