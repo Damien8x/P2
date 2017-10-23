@@ -6,10 +6,13 @@
 #include "FindFault.h"
 #include <iostream>
 #include <string>
-// Definition: Driver designed to test all public functions and legeal state transitions provided by the FindFault class with all possible inputs laid out per the 
-// contract set in the FindFault.h documentation. Driver will create a FindFault object, assign an integer value to FindFault.arraySize(), followed by
-// a call to the FindFault.encrypt() method, thus setting a limit to the number of EncryptWord objects contained in the FindFault object. Multiple, distinct
-// FindFault objects will be created and maintained to ensure objects retain an independent identity and are not impacted by one another. 
+// Definition: Driver designed to test all public functions and legeal state transitions provided by the FindFault class, with all possible inputs laid out per the 
+// contract set by the FindFault.h documentation. All public functions of the FindFault class will be tested for integrety based on expected vs actual output. 
+// Multiple, distinct FindFault objects will be created and maintained to ensure objects retain an independent identity and are not impacted by one another. 
+// This application holds the FindFault class accountable for its core requriements; properly encapsualting EncryptWord objects, retaining encryption and decryption,
+// adding the possibility of corruption, providing a means to test for corruption, and the tracking/providing of queries to the FindFault class to detect
+// whether corruption has occured.
+
 
 void detectCorruption(FindFault&, int);
 void addAndEncrypt(FindFault&, string);

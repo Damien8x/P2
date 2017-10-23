@@ -7,13 +7,11 @@
 #include <string>;
 
 // Definition: class designed to implement all features laid out in FindFault.h, with focus on containment, composition and class maintenance.
-// class is responsible for encapsulating several distinct EncryptWord objects using a dynamic array, with a size assigned by application. A FindFault object
+// class is responsible for encapsulating several distinct EncryptWord objects using a dynamic, resizeable array. A FindFault object
 // will be capable of encryption and decryption by utilizinig the EncryptWord class, through composition. Class will also add a notion of corruption, which
-// will be identified after the application determines the correct shift value used in encryption. The FindFault.comparePhrase() methodd will detect
-// corruption by comparing values of decrypted encryption and orignal phrase, prior to encyption. Class will provide responsive feedback to clients attempts
-// at determining the shift key value, thus aiding in the detection of corruption. All queries in the attempt to determine the key value will be tracked
-// and available to the application through the help of the EncryptWord class. Upon completion of the program all memory assigned to the heap will be properly 
-// managed to assure no memory leaks have been left present.
+// can be determined by a function call to detectCorruption() for any encapsualted EncryptWord obect. The FindFault.comparePhrase() methodd will detect
+// corruption by comparing values of decrypted encryption and orignal phrase, prior to encyption. Upon completion of the program all memory assigned to the 
+// heap will be properly managed to assure no memory leaks have been left present.
 
 
 //FindFault.cpp constants are used to enhance readability and avoid hard coding.
