@@ -12,7 +12,7 @@
 // This application holds the FindFault class accountable for its core requriements; properly encapsualting EncryptWord objects, retaining encryption and decryption,
 // adding the possibility of corruption, providing a means to test for corruption, and the tracking/providing of queries to the FindFault class to detect
 // whether corruption has occured.
-
+//
 
 void detectCorruption(FindFault&, int);
 void addAndEncrypt(FindFault&, string);
@@ -20,6 +20,7 @@ void printNumberOfElements(FindFault&);
 void printNumberOfQueries(FindFault&);
 void welcomeMessage();
 void printCorruption(FindFault&, int);
+void corruptionDetectLoop(FindFault&);
 
 int main() {
 	
@@ -88,7 +89,7 @@ int main() {
 	addAndEncrypt(ff2, "tst spcl kys !@#$%^&");
 
 	// check for encryption corruption for FindFault object ff2 at element position 2
-	cout << "Expected output: display if corruption has occured and element number" << endl << endl;
+	cout << "Expected output: display if corruption has occured and element number: 2" << endl << endl;
 	detectCorruption(ff2, 2);
 
 	//expected total number of queries for object ff2: 1
@@ -112,7 +113,33 @@ int main() {
 	// re-call printCorruption to ensure objects retain their values
 	cout << "re-call same method to ensure object retains value after multiple calls" << endl << endl;
 	printCorruption(ff, 1);
-	
+
+	// expected number of elements for object ff2: 3
+	cout << "Encryption for object 2. expected output: encrypted string at position 3" << endl << endl;
+	addAndEncrypt(ff2, "this is EW 3");
+
+	// expected number of elements for object ff2: 4
+	cout << "Encryption for object 2. expected output: encrypted string at position 4" << endl << endl;
+	addAndEncrypt(ff2, "THIS IS ew 4");
+
+	// expected number of elements for object ff2: 5
+	cout << "Encryption for object 2. expected output: encrypted string at position 5" << endl << endl;
+	addAndEncrypt(ff2, "go seahawks");
+
+	// expected number of elements for object ff2: 6
+	cout << "Encryption for object 2. expected output: encrypted string at position 6" << endl << endl;
+	addAndEncrypt(ff2, "BUY ETHEREUM");
+
+	// expected number of elements for object ff2: 7
+	cout << "Encryption for object 2. expected output: encrypted string at position 7" << endl << endl;
+	addAndEncrypt(ff2, "ob ob ob ject");
+
+	// print number of queries for object ff2 before entering corruptDetectLoop
+	printNumberOfQueries(ff2);
+
+	// loop through all encapsualted objects of ff2 object, displaying if corruption has occured, followed by query results.
+	corruptionDetectLoop(ff2);
+
 	cin.get();
 	return 0;
 }
@@ -120,7 +147,7 @@ int main() {
 //Formatted Welcome Message
 void welcomeMessage() {
 	cout << "\n*********************************************************************************"<<
-	"\n*\t\t\t\t\t\t\t\t\t\t*\n*WELCOME TO FIND FAULT TEST DRIVER!!\t\t\t\t\t\t*\n""*CPSC 5011"<<
+	"\n*\t\t\t\t\t\t\t\t\t\t*\n*WELCOME TO FIND FAULT TEST DRIVER!!\t\t\t\t\t\t*\n""*CPSC 5011 "<<
 	"PROJECT 2\t\t\t\t\t\t\t\t*\n*AUTHOR: DAMIEN SUDOL\t\t\t\t\t\t\t\t*\n*Version: 1.1\t\t\t\t\t\t\t\t\t*"<<
 	"\n*\t\t\t\t\t\t\t\t\t\t*\n*********************************************************************************" << endl;
 }
@@ -129,8 +156,8 @@ void welcomeMessage() {
 // modify: none
 // expected output: formatted display indicating number of corruptions and succesful encryptions queried.
 void printNumberOfQueries(FindFault& ffobject) {
-	cout << "Number of queries detecting corruption:\t\t" << ffobject.getQueryAttempts(false) << endl;
-	cout << "Number of queries with no corruption detected:\t" << ffobject.getQueryAttempts(true) << endl;
+	cout << "Number of queries detecting corruption:\t\t" << ffobject.getQueryAttempts(true) << endl;
+	cout << "Number of queries with no corruption detected:\t" << ffobject.getQueryAttempts(false) << endl;
 	cout << "*********************************************************************************" << endl;
 }
 
@@ -178,4 +205,17 @@ void detectCorruption(FindFault &ffobject, int elementNumber) {
 void printCorruption(FindFault& ffobject, int elementNumber) {
 	cout << ffobject.printCorruption(elementNumber) << endl;
 	cout << "*********************************************************************************" << endl;
+}
+
+// Defintion: loops through all encapsualted EncryptWord objects for passed FindFault object. calls driver detectCorruption() and printNumberOfQueries methods.
+// to demonstrate incremental increases for returned corrupted vs not corrupted encryptions.
+// precondition. Object must be ON. Argument 1 must be of a valid initialized object of type FindFault. integer argument must be within bounds;
+// modify: each call will increase by a value of one either FindFault.orruptedEncryption or FindFault.encryptionNotCorrupted
+// expected output: formatted display of corruption, followed by formatted display of query statistics, with a total increasing by one per call.
+void corruptionDetectLoop(FindFault& ffobject) {
+	for (int i = 1; i <= ffobject.getNumberOfElements(); i++) {
+		cout << "Expected output: display if corruption has occured and element number: " << i << endl << endl;
+		detectCorruption(ffobject, i);
+		printNumberOfQueries(ffobject);
+	}
 }

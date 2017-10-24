@@ -10,7 +10,8 @@
 #include <iostream>
 #include <string>
 using namespace std;
-// Description: class aims to provide functions in a logical, efficient format, capable encapsulating multiple, distinct EncryptWord objects.
+// *DESCRIPTION*
+// class aims to provide functions in a logical, efficient format, capable encapsulating multiple, distinct EncryptWord objects.
 // The number of EncryptWord objects is dynamic and will increase with every call to the FindFault.encrypt() method.
 // It is important to note the element position for any specific object you wish to query against later. The element position will be necessary for 
 // calling the correct object with the method provided by this class.
@@ -20,7 +21,7 @@ using namespace std;
 // Legal States OFF(getNumberOfElements == 0). Full functionality if class not available.
 // FindFault.getNumberOfElements() can be used to determine the state of a FindFault object at any time. 
 // 
-// State Transitions
+// *STATE TRANSITIONS*
 // OFF-> OFF (constructor -> getNumberOfElements()) *returns default of 0
 // OFF-> OFF (constructor-> getQueryAttempts()) *returns default of 0
 // OFF-> ON (constructor -> encrypt())
@@ -28,8 +29,15 @@ using namespace std;
 // ON-> ON (encrypt() -> encrypt())
 // ON-> ON (Encrypt() -> getNumberOfElements())
 // ON-> ON (encrypt() -> detectCorruption()) 
-// 
-// Assumptions: class will be utilized for its intended purpose, encapsulating EncryptWord objects, providing encryption and decryption,
+//
+//*INVARIANTS*
+// FindFault.encrypt(string) -> argument must be a minimum of 4 characters
+// FindFault.detectCorruption(int) -> object must be ON. argument must be greater than 0 and equal or less than FindFault.getNumberOfElements().
+// FindFault.decrypt(int) -> object must be ON. argument must be greater than 0 and equal or less than FindFault.getNumberOfElements().
+// FindFault.printCorruption(int) -> object must be ON. argument must be greater than 0 and equal or less than FindFault.getNumberOfElements().
+//
+//*ASSUMPTIONS*
+// class will be utilized for its intended purpose, encapsulating EncryptWord objects, providing encryption and decryption,
 // the notion of possible corruption, ability to query for corruption, a means to track and display these queries
 // All public funtions are necessary for succesful implementation of the classes intended use.
 // Please review all definitions, pre and post conditions outlined belowto utilize the full potential of the class.

@@ -4,7 +4,7 @@
 // Version: 1.1
 
 #include "FindFault.h"
-#include <string>;
+#include <string>
 
 // Definition: class designed to implement all features laid out in FindFault.h, with focus on containment, composition and class maintenance.
 // class is responsible for encapsulating several distinct EncryptWord objects using a dynamic, resizeable array. A FindFault object
@@ -80,6 +80,7 @@ string FindFault::printCorruption(int elementNumber) const {
 	string corruptChar;
 	string phrase = phraseArray[elementNumber - 1];
 	string ewphrase = ewArray[elementNumber - 1].getPhrase();
+	int phraseLength = phrase.length();
 
 	if (phrase == ewphrase) {
 		corruption = "NO CORRUPTION \nElement Position:\t" + to_string(elementNumber) + "\nDecrypted String:\t" + ewphrase + "\nOriginal String:\t" + phrase;
@@ -87,7 +88,7 @@ string FindFault::printCorruption(int elementNumber) const {
 	}
 	else {
 
-		for (int i = 0; i <= phrase.length(); i++) {
+		for (int i = 0; i <= phraseLength; i++) {
 			if (phrase[i] != ewphrase[i]) {
 				corruptCharNum = i + 1;
 				originalChar = phrase[i];
